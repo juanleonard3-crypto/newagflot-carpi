@@ -1,0 +1,72 @@
+name: Compilar y publicar
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Generar configuración de agentes
+        run: python scripts/build_config.py
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Preparar interfaz e ícono
+        shell: bash
+        run: |
+          rm -rf desktop/ui
+          cp -r shared-ui desktop/ui
+          mkdir -p desktop/build
+          cp shared-ui/assets/mascota.png desktop/build/icon.png
+      - name: Instalar dependencias
+        working-directory: desktop
+        run: npm install
+      - name: Compilar instalador
+        working-directory: desktop
+        run: npx electron-builder --win nsis --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exe
+          path: desktop/dist/AgenteFlotante-Setup.exe
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Generar configuración de agentes
+        run: python scripts/build_config.py
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: '8.7' }
+      - name: Compilar APK
+        run: gradle -p android assembleDebug --no-daemon
+      - name: Renombrar APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk AgenteFlotante.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: AgenteFlotante.apk
+
+  publicar:
+    needs: [windows, android]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: salida, merge-multiple: true }
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            salida/AgenteFlotante-Setup.exe
+            salida/AgenteFlotante.apk
