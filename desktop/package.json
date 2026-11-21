@@ -1,0 +1,17 @@
+{
+  "name": "agente-flotante",
+  "version": "1.0.0",
+  "description": "Agente flotante con IA para Windows",
+  "author": "ISFD y T República Federal de Alemania",
+  "main": "main.js",
+  "scripts": { "start": "electron ." },
+  "devDependencies": { "electron": "^31.7.7", "electron-builder": "^24.13.3" },
+  "build": {
+    "appId": "ar.edu.isfd.agenteflotante",
+    "productName": "AgenteFlotante",
+    "directories": { "buildResources": "build" },
+    "files": ["main.js", "preload.js", "ui/**/*"],
+    "win": { "target": ["nsis"] },
+    "nsis": { "oneClick": true, "artifactName": "AgenteFlotante-Setup.exe" }
+  }
+}

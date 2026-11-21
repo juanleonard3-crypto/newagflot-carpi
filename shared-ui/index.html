@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CarpiTech</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="bubble" title="Abrir asistente"><img src="assets/mascota.png" alt=""></div>
+<div id="panel">
+  <header id="head">
+    <img src="assets/mascota.png" alt="" class="avatar">
+    <div class="who"><strong id="title">CarpiTech</strong><small id="sub"></small></div>
+    <select id="agent" aria-label="Elegir agente"></select>
+    <button id="sound" class="icon" title="Voz de respuesta">🔊</button>
+    <button id="collapse" class="icon" title="Minimizar">–</button>
+  </header>
+  <div id="eyebadge" hidden>👁 Estoy viendo tu pantalla</div>
+  <main id="msgs"></main>
+  <div id="chips"></div>
+  <footer id="bar">
+    <button id="eye" class="icon" title="Dejar que vea mi pantalla">👁</button>
+    <button id="mic" class="icon" title="Hablar con voz continua">🎤</button>
+    <input id="input" type="text" placeholder="Escribí tu mensaje…" autocomplete="off">
+    <button id="send" title="Enviar">➤</button>
+  </footer>
+</div>
+<script src="config.js"></script>
+<script src="agents.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

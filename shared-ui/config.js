@@ -1,0 +1,5 @@
+window.APP_CONFIG = {
+  "workerUrl": "PEGAR_AQUI_LA_URL_DE_TU_WORKER_DE_CLOUDFLARE",
+  "voiceOut": "system",
+  "defaultAgent": "carpitech"
+};
